@@ -1,0 +1,70 @@
+namespace: phsing-tv
+
+image:
+  repository: wotanday/laravel-app # TODO: 改成你的镜像仓库地址
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+resources:
+  phpFpm:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+  nginx:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 128Mi
+
+app:
+  name: "Laravel"
+  env: "production"
+  debug: "false"
+  url: "https://your-domain.example.com" # TODO
+  locale: "en"
+  fallbackLocale: "en"
+  logChannel: "stack"
+  logLevel: "warning"
+  sessionDriver: "database"
+  sessionLifetime: "120"
+  cacheStore: "database"
+  queueConnection: "database"
+  filesystemDisk: "local"
+  mailMailer: "log"
+
+# 敏感信息：默认留空，建议用 --set 或 -f secrets-values.yaml（不提交 Git）传入
+# 例如：helm install ... --set secrets.appKey=base64:xxx --set secrets.dbPassword=xxx
+secrets:
+  dbPassword: "csie"
+  dbUsername: "root"
+  dbDatabase: "phsing_tv"
+
+postgres:
+  enabled: true
+  image: postgres:15-alpine
+  storage: 10Gi
+  storageClassName: "" # TODO: 按集群环境填写，留空则用集群默认 StorageClass
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+migration:
+  enabled: true
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  host: your-domain.example.com # TODO
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"

@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: laravel-key-gen
+  namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      serviceAccountName: default 
+      restartPolicy: Never
+      containers:
+      - name: generator
+        image: wotanday/laravel-app:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            KEY=$(php artisan key:generate --show)
+            kubectl create secret generic app-secret --from-literal=APP_KEY=$KEY --dry-run=client -o yaml | kubectl apply -f -
