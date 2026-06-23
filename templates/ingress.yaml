@@ -9,7 +9,6 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.ingress.host }}
       http:
         paths:
           - path: /
@@ -18,5 +17,5 @@ spec:
               service:
                 name: laravel-app
                 port:
-                  number: 80
+                  number: 8123
 {{- end }}

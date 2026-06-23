@@ -80,6 +80,6 @@ spec:
   selector:
     app: laravel-app
   ports:
-    - port: 80
+    - port: 8123
       targetPort: 80
   type: ClusterIP
